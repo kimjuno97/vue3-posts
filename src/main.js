@@ -5,9 +5,17 @@ import { createApp } from 'vue';
 import router from '@/router';
 import App from './App.vue';
 
-createApp(App).use(router).mount('#app');
+import funcPlugins from './plugins/func';
+import objPlugins from './plugins/obj';
+import person from './plugins/person';
+
+const app = createApp(App);
+app.use(router);
+app.use(funcPlugins);
+app.use(person);
+// 이름 바꿀 수 있음
+// app.use(person, { name: '김준호' });
+app.use(objPlugins);
+app.mount('#app');
 
 import 'bootstrap/dist/js/bootstrap.js';
-
-console.log(import.meta.env);
-console.dir(import.meta.env);
