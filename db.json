@@ -1,64 +1,40 @@
 {
   "posts": [
     {
-      "id": 1,
-      "title": "제목1",
-      "content": "내용1",
-      "createdAt": "2020-03-03"
-    },
-    {
-      "id": 2,
-      "title": "제목2",
-      "content": "내용2",
-      "createdAt": "2020-03-03"
-    },
-    {
-      "id": 3,
-      "title": "제목3",
-      "content": "내용3",
-      "createdAt": "2020-03-03"
-    },
-    {
-      "title": "제목4",
-      "content": "내용4",
-      "createdAt": "2020-04-04",
-      "id": 4
-    },
-    {
-      "id": 5,
-      "title": "제목5",
-      "content": "내용5",
-      "createdAt": "2020-05-05"
-    },
-    {
-      "title": "제목6",
-      "content": "내용6",
-      "createdAt": "2020-06-07",
-      "id": 6
-    },
-    {
-      "title": "제목7",
-      "content": "내용7",
-      "createdAt": "2020-07-07",
-      "id": 7
-    },
-    {
-      "title": "제목8",
-      "content": "내용8",
-      "createdAt": "2020-08-07",
-      "id": 8
-    },
-    {
-      "title": "제목999",
-      "content": "내용9",
-      "createdAt": "2020-09-07",
-      "id": 9
-    },
-    {
-      "title": "추가한",
+      "title": "추가한22",
       "content": "방금",
       "createdAt": 1672294196287,
       "id": 10
+    },
+    {
+      "title": "추가한12",
+      "content": "213",
+      "createdAt": 1672299621935,
+      "id": 11
+    },
+    {
+      "title": "추가한12",
+      "content": "213",
+      "createdAt": 1672299621935,
+      "id": 11
+    },
+    {
+      "title": "추가한12",
+      "content": "213",
+      "createdAt": 1672299621935,
+      "id": 11
+    },
+    {
+      "title": "추가한12",
+      "content": "213",
+      "createdAt": 1672299621935,
+      "id": 11
+    },
+    {
+      "title": "qwe12",
+      "content": "adsqwqdsasda",
+      "createdAt": 1672302479704,
+      "id": 12
     }
   ]
 }

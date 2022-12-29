@@ -38,11 +38,7 @@
 						</li>
 					</ul>
 					<div class="d-flex" role="search">
-						<button
-							class="btn btn-outline-success"
-							type="submit"
-							@click="goPage"
-						>
+						<button class="btn btn-outline-light" type="submit" @click="goPage">
 							글쓰기
 						</button>
 					</div>

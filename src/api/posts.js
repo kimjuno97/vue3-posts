@@ -6,7 +6,7 @@ export async function getPosts(params) {
 }
 
 export async function getPostById(id) {
-	const { data } = await posts.get(id);
+	const { data } = await posts.get(`${id}`);
 	return data;
 }
 
@@ -16,7 +16,7 @@ export async function createPost(body) {
 }
 
 export async function updatePost(id, body) {
-	const { data } = await posts.put(id, body);
+	const { data } = await posts.patch(`${id}`, body);
 	return data;
 }
 
