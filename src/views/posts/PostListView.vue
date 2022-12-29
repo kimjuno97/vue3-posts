@@ -11,10 +11,16 @@
 			></PostItem>
 		</div>
 	</div>
+	<br class="my-4" />
+	<AppCard>
+		<PostDetailViewVue :id="1"></PostDetailViewVue>
+	</AppCard>
 </template>
 
 <script setup>
 import PostItem from '@/components/posts/PostItem.vue';
+import PostDetailViewVue from './PostDetailView.vue';
+import AppCard from '@/components/AppCard.vue';
 import { ref } from 'vue';
 import { getPosts } from '@/api/posts';
 import { useRouter } from 'vue-router';
@@ -22,8 +28,12 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const posts = ref([]);
 
-const fetchposts = () => {
-	posts.value = getPosts();
+const fetchposts = async () => {
+	try {
+		posts.value = await getPosts();
+	} catch (err) {
+		console.error('데이터 fetch error :', err);
+	}
 };
 fetchposts();
 
