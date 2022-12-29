@@ -8,3 +8,6 @@ import App from './App.vue';
 createApp(App).use(router).mount('#app');
 
 import 'bootstrap/dist/js/bootstrap.js';
+
+console.log(import.meta.env);
+console.dir(import.meta.env);

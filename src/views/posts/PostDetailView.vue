@@ -29,7 +29,7 @@ import { deletePost, getPostById } from '@/api/posts';
 import { ref } from 'vue';
 
 const props = defineProps({
-	id: Number,
+	id: String,
 });
 
 const router = useRouter();
@@ -53,7 +53,7 @@ const fetchPost = async () => {
 		const data = await getPostById(props.id);
 		setPost(data);
 	} catch (err) {
-		console.error('데이터 Get 실패함 : ', err);
+		console.error('Detail error 데이터 Get 실패함 :  ', err);
 	}
 };
 const setPost = ({ title, content, createdAt }) => {

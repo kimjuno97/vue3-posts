@@ -1,28 +1,26 @@
-import axios from 'axios';
+import { posts } from '.';
 
-const url = 'http://localhost:5000/posts';
-
-export async function getPosts() {
-	const { data } = await axios.get(url);
-	return data;
+export async function getPosts(params) {
+	const { data, headers } = await posts.get('/', { params });
+	return [data, headers];
 }
 
 export async function getPostById(id) {
-	const { data } = await axios.get(`${url}/${id}`);
+	const { data } = await posts.get(id);
 	return data;
 }
 
 export async function createPost(body) {
-	const { data } = await axios.post(url, body);
+	const { data } = await posts.post('/', body);
 	return data;
 }
 
 export async function updatePost(id, body) {
-	const { data } = await axios.put(`${url}/${id}`, body);
+	const { data } = await posts.put(id, body);
 	return data;
 }
 
 export async function deletePost(id) {
-	const { data } = await axios.delete(`${url}/${id}`);
+	const { data } = await posts.delete(`/${id}`);
 	return data;
 }
