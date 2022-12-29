@@ -10,6 +10,7 @@
 				:content="post.content"
 				:created-at="post.createdAt"
 				@click="goPage(post.id)"
+				@modal="openModal(post)"
 			></PostItem>
 		</div>
 	</div>
@@ -18,6 +19,15 @@
 		:page-count="pageCount"
 		@page="page => (params._page = page)"
 	/>
+	<Teleport to="#modal">
+		<PostModal
+			v-model="show"
+			:title="modalTitle"
+			:content="modalContent"
+			:created-at="modalCreatedAt"
+		/>
+	</Teleport>
+
 	<br class="my-4 mt-5" />
 </template>
 
@@ -27,8 +37,10 @@ import PostItem from '@/components/posts/PostItem.vue';
 import { computed, ref, watchEffect } from 'vue';
 import { getPosts } from '@/api/posts';
 import { useRouter } from 'vue-router';
+
 import AppPageNationV from '@/components/AppPageNation.vue';
 import PostFilter from '@/components/posts/PostFilter.vue';
+import PostModal from '@/components/posts/PostModal.vue';
 
 const params = ref({
 	_sort: 'createdAt',
@@ -53,7 +65,6 @@ const fetchposts = async () => {
 		console.error('데이터 fetch error :', err);
 	}
 };
-
 watchEffect(fetchposts);
 const goPage = id => {
 	// router.push(`/posts/${id}`);
@@ -66,6 +77,17 @@ const goPage = id => {
 		// },
 		// hash: 'word',
 	});
+};
+//modal
+const show = ref(false);
+const modalTitle = ref('');
+const modalContent = ref('');
+const modalCreatedAt = ref('');
+const openModal = ({ title, content, createdAt }) => {
+	show.value = true;
+	modalTitle.value = title;
+	modalContent.value = content;
+	modalCreatedAt.value = createdAt;
 };
 </script>
 

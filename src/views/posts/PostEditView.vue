@@ -19,6 +19,7 @@
 			</div>
 		</template>
 	</PostForm>
+	<AppAlert :items="alerts" />
 </template>
 
 <script setup>
@@ -28,6 +29,8 @@ import { getPostById } from '@/api/posts';
 import { updatePost } from '@/api/posts';
 
 import PostForm from '@/components/posts/PostForm.vue';
+import AppAlert from '@/components/AppAlert.vue';
+
 const {
 	params: { id },
 } = useRoute();
@@ -51,10 +54,21 @@ fetchPost();
 const edit = async () => {
 	try {
 		await updatePost(id, { ...form.value });
-		router.push({ name: 'PostDetail', params: { id } });
+		vAlert('수정이 완료되었습니다.', 'success');
 	} catch (err) {
 		console.error('업데이트 에러 :', err);
+		vAlert(err.message);
 	}
+};
+
+//alert
+const alerts = ref([]);
+const vAlert = (message, type) => {
+	alerts.value.push({ message, type });
+
+	setTimeout(() => {
+		alerts.value.shift();
+	}, 2000);
 };
 </script>
 
