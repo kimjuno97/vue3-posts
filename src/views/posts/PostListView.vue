@@ -3,22 +3,27 @@
 	<hr class="my-4" />
 	<PostFilter v-model:title="params.title_like" v-model:limt="params._limit" />
 	<br class="my-4" />
-	<div class="row g-3">
-		<div v-for="post in posts" :key="post.id" class="col-4">
-			<PostItem
-				:title="post.title"
-				:content="post.content"
-				:created-at="post.createdAt"
-				@click="goPage(post.id)"
-				@modal="openModal(post)"
-			></PostItem>
+
+	<AppLoading v-if="loading" />
+	<AppError v-else-if="error" :message="error.message" />
+	<template v-else>
+		<div class="row g-3">
+			<div v-for="post in posts" :key="post.id" class="col-4">
+				<PostItem
+					:title="post.title"
+					:content="post.content"
+					:created-at="post.createdAt"
+					@click="goPage(post.id)"
+					@modal="openModal(post)"
+				></PostItem>
+			</div>
 		</div>
-	</div>
-	<AppPageNation
-		:current-page="params._page"
-		:page-count="pageCount"
-		@page="page => (params._page = page)"
-	/>
+		<AppPageNation
+			:current-page="params._page"
+			:page-count="pageCount"
+			@page="page => (params._page = page)"
+		/>
+	</template>
 	<Teleport to="#modal">
 		<PostModal
 			v-model="show"
@@ -28,7 +33,7 @@
 		/>
 	</Teleport>
 
-	<br class="my-4 mt-5" />
+	<hr class="my-4 mt-5" />
 </template>
 
 <script setup>
@@ -48,6 +53,10 @@ const params = ref({
 	_limit: '3',
 	title_like: '',
 });
+
+const error = ref(null);
+const loading = ref(false);
+
 const router = useRouter();
 const posts = ref([]);
 const totalCount = ref(0);
@@ -57,11 +66,14 @@ const pageCount = computed(() =>
 
 const fetchposts = async () => {
 	try {
+		loading.value = true;
 		const [data, headers] = await getPosts(params.value);
 		posts.value = data;
 		totalCount.value = headers['x-total-count'];
 	} catch (err) {
-		console.error('데이터 fetch error :', err);
+		error.value = err;
+	} finally {
+		loading.value = false;
 	}
 };
 watchEffect(fetchposts);

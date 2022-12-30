@@ -1,25 +1,41 @@
 <template>
-	<h2>게시글 수정</h2>
-	<br class="my-4" />
-	<PostForm
-		v-model:title="form.title"
-		v-model:content="form.content"
-		@submit.prevent="edit"
-	>
-		<template #actions>
-			<div class="pt-4">
-				<button
-					type="button"
-					class="btn btn-outline-danger me-2"
-					@click="goDetailPage"
-				>
-					취소
-				</button>
-				<button class="btn btn-primary">수정</button>
-			</div>
-		</template>
-	</PostForm>
-	<AppAlert :items="alerts" />
+	<AppLoading v-if="loading" />
+
+	<AppError v-else-if="error" :message="error.message" />
+
+	<template v-else>
+		<h2>게시글 수정</h2>
+		<br class="my-4" />
+		<AppError v-if="editError" :message="editError.message" />
+		<PostForm
+			v-model:title="form.title"
+			v-model:content="form.content"
+			@submit.prevent="edit"
+		>
+			<template #actions>
+				<div class="pt-4">
+					<button
+						type="button"
+						class="btn btn-outline-danger me-2"
+						@click="goDetailPage"
+					>
+						취소
+					</button>
+					<button class="btn btn-primary" :disabled="editLoading">
+						<template v-if="editLoading">
+							<span
+								class="spinner-border spinner-border-sm"
+								role="status"
+								aria-hidden="true"
+							></span>
+							<span class="visually-hidden">Loading...</span>
+						</template>
+						<template v-else> 수정 </template>
+					</button>
+				</div>
+			</template>
+		</PostForm>
+	</template>
 </template>
 
 <script setup>
@@ -29,6 +45,10 @@ import { getPostById } from '@/api/posts';
 import { updatePost } from '@/api/posts';
 
 import PostForm from '@/components/posts/PostForm.vue';
+
+import useAlert from '@/composables/alert';
+
+const { vAlert, vSusccess } = useAlert();
 
 const {
 	params: { id },
@@ -41,33 +61,40 @@ const form = ref({
 	title: null,
 	content: null,
 });
+const error = ref(null);
+const loading = ref(false);
+
 const fetchPost = async () => {
-	const data = await getPostById(id);
-	setForm(data);
+	try {
+		loading.value = true;
+		const data = await getPostById(id);
+		setForm(data);
+	} catch (err) {
+		error.value = err;
+	} finally {
+		loading.value = false;
+	}
 };
 const setForm = ({ title, content, createdAt }) => {
 	form.value = { title, content, createdAt };
 };
 fetchPost();
 
+const editError = ref(null);
+const editLoading = ref(false);
+
 const edit = async () => {
 	try {
+		editLoading.value = true;
 		await updatePost(id, { ...form.value });
-		vAlert('수정이 완료되었습니다.', 'success');
+		router.push({ name: 'PostDetail', params: { id } });
+		vSusccess('수정이 완료되었습니다.');
 	} catch (err) {
-		console.error('업데이트 에러 :', err);
 		vAlert(err.message);
+		editError.value = err;
+	} finally {
+		editError.value = false;
 	}
-};
-
-//alert
-const alerts = ref([]);
-const vAlert = (message, type) => {
-	alerts.value.push({ message, type });
-
-	setTimeout(() => {
-		alerts.value.shift();
-	}, 2000);
 };
 </script>
 

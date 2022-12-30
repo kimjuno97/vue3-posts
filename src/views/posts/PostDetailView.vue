@@ -1,28 +1,49 @@
 <template>
-	<h2>{{ post.title }}</h2>
-	<p>{{ post.content }}</p>
-	<p class="text-muted">
-		{{ $dayjs(post.createdAt).format('YYYY. MM. DD HH:mm:ss') }}1
-	</p>
-	<br class="my-4" />
-	<div class="row">
-		<div class="col-auto">
-			<button class="btn btn-outline-dark">이전글</button>
+	<AppLoading v-if="loading" />
+	<AppError v-else-if="error" :message="error.message" />
+	<template v-else>
+		<h2>{{ post.title }}</h2>
+		<p>{{ post.content }}</p>
+		<p class="text-muted">
+			{{ $dayjs(post.createdAt).format('YYYY. MM. DD HH:mm:ss') }}1
+		</p>
+		<hr class="my-4" />
+		<AppError v-if="removeError" :message="removeError.message" />
+		<div class="row">
+			<div class="col-auto">
+				<button class="btn btn-outline-dark">이전글</button>
+			</div>
+			<div class="col-auto">
+				<button class="btn btn-outline-dark">다음글</button>
+			</div>
+			<div class="col-auto me-auto"></div>
+			<div class="col-auto">
+				<button class="btn btn-outline-dark" @click="goListPage">목록</button>
+			</div>
+			<div class="col-auto">
+				<button class="btn btn-outline-primary" @click="goEditPage">
+					수정
+				</button>
+			</div>
+			<div class="col-auto">
+				<button
+					@click="remove"
+					class="btn btn-outline-danger"
+					:disabled="removeLoading"
+				>
+					<template v-if="removeLoading">
+						<span
+							class="spinner-border spinner-border-sm"
+							role="status"
+							aria-hidden="true"
+						></span>
+						<span class="visually-hidden">Loading...</span>
+					</template>
+					<template v-else> 삭제 </template>
+				</button>
+			</div>
 		</div>
-		<div class="col-auto">
-			<button class="btn btn-outline-dark">다음글</button>
-		</div>
-		<div class="col-auto me-auto"></div>
-		<div class="col-auto">
-			<button class="btn btn-outline-dark" @click="goListPage">목록</button>
-		</div>
-		<div class="col-auto">
-			<button class="btn btn-outline-primary" @click="goEditPage">수정</button>
-		</div>
-		<div class="col-auto">
-			<button @click="remove" class="btn btn-outline-danger">삭제</button>
-		</div>
-	</div>
+	</template>
 </template>
 
 <script setup>
@@ -50,27 +71,41 @@ const post = ref({
 	createdAt: null,
 });
 
+const error = ref(null);
+const loading = ref(false);
+
 const fetchPost = async () => {
 	try {
+		loading.value = true;
 		const data = await getPostById(props.id);
 		setPost(data);
 	} catch (err) {
-		console.error('Detail error 데이터 Get 실패함 :  ', err);
+		error.value = err;
+	} finally {
+		loading.value = false;
 	}
 };
 const setPost = ({ title, content, createdAt }) => {
 	post.value = { title, content, createdAt };
 };
 fetchPost();
+
+const removeError = ref(null);
+const removeLoading = ref(false);
+
 const remove = async () => {
 	try {
 		if (!confirm('삭제 하시겠습니까?')) {
 			return;
 		}
+		removeLoading.value = true;
 		await deletePost(props.id);
 		router.push({ name: 'PostList' });
 	} catch (err) {
 		console.error('삭제에 실패했습니다 :', err);
+		removeError.value = err;
+	} finally {
+		removeLoading.value = true;
 	}
 };
 const goListPage = () => router.push({ name: 'PostList' });
