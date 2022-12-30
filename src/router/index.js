@@ -11,6 +11,7 @@ import NestedView from '@/views/nested/NestedView.vue';
 import NestedOneView from '@/views/nested/NestedOneView.vue';
 import NestedTwoView from '@/views/nested/NestedTwoView.vue';
 import NestedHome from '@/views/nested/NestedHome.vue';
+import MyPage from '@/views/MyPage.vue';
 
 const routes = [
 	{
@@ -70,11 +71,40 @@ const routes = [
 			},
 		],
 	},
+	{
+		path: '/my',
+		name: 'MyPage',
+		component: MyPage,
+		beforeEnter: [removeQueryString],
+		// query 없는 방법
+		// (to, from) => {
+		// 	if (Object.keys(to.query).length > 0) {
+		// 		return { path: to.path, query: {} };
+		// 	}
+		// },
+	},
 ];
+// query 없애기
+function removeQueryString(to) {
+	if (Object.keys(to.query).length > 0) {
+		return { path: to.path, query: {} };
+	}
+}
 
 const router = createRouter({
 	history: createWebHistory('/'),
 	routes,
 });
+
+// 리다이렉트 막기
+// router.beforeEach((to, from) => {
+// 	console.log('to', to);
+// 	console.log('from', from);
+// 	if (to.name === 'MyPage') {
+// 		return { name: 'Home' };
+// 		// return '/posts';
+// 		// return false;
+// 	}
+// });
 
 export default router;

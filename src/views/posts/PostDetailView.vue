@@ -12,10 +12,20 @@
 		<AppError v-if="removeError" :message="removeError.message" />
 		<div class="row">
 			<div class="col-auto">
-				<button class="btn btn-outline-dark">이전글</button>
+				<button
+					class="btn btn-outline-dark"
+					@click="router.push(`/posts/${parseInt(props.id) - 1}`)"
+				>
+					이전글
+				</button>
 			</div>
 			<div class="col-auto">
-				<button class="btn btn-outline-dark">다음글</button>
+				<button
+					class="btn btn-outline-dark"
+					@click="router.push(`/posts/${parseInt(props.id) - +1}`)"
+				>
+					다음글
+				</button>
 			</div>
 			<div class="col-auto me-auto"></div>
 			<div class="col-auto">
@@ -48,7 +58,7 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
 import useAxios from '@/hooks/useAxios';
 import useAlert from '@/composables/alert';
 import { computed, toRefs } from 'vue';
@@ -104,6 +114,22 @@ const remove = () => {
 const goListPage = () => router.push({ name: 'PostList' });
 const goEditPage = () =>
 	router.push({ name: 'PostEdit', params: { id: props.id } });
+
+// 컴포넌트 안에서 쓰는 네비게이션 가드 비교
+onBeforeRouteUpdate(() => {
+	console.log('onBeforeRouteUpdate');
+});
+onBeforeRouteLeave(() => {
+	console.log('onBeforeRouteLeave');
+});
+</script>
+
+<script>
+export default {
+	beforeRouteEnter() {
+		console.log('beforeRouteEnter');
+	},
+};
 </script>
 
 <style lang="scss" scoped></style>
