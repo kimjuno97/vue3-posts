@@ -1,7 +1,9 @@
 <template>
 	<h2>{{ post.title }}</h2>
 	<p>{{ post.content }}</p>
-	<p class="text-muted">{{ post.createdAt }}1</p>
+	<p class="text-muted">
+		{{ $dayjs(post.createdAt).format('YYYY. MM. DD HH:mm:ss') }}1
+	</p>
 	<br class="my-4" />
 	<div class="row">
 		<div class="col-auto">

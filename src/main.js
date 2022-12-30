@@ -6,6 +6,7 @@ import router from '@/router';
 import App from './App.vue';
 
 import globalDirectives from './plugins/global-directives';
+import dayjs from './plugins/dayjs';
 
 import funcPlugins from './plugins/func';
 import objPlugins from './plugins/obj';
@@ -16,6 +17,7 @@ app.use(router);
 app.use(funcPlugins);
 app.use(person);
 app.use(globalDirectives);
+app.use(dayjs);
 // 이름 바꿀 수 있음
 // app.use(person, { name: '김준호' });
 app.use(objPlugins);
