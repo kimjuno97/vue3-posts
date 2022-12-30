@@ -39,63 +39,45 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { getPostById } from '@/api/posts';
-import { updatePost } from '@/api/posts';
-
 import PostForm from '@/components/posts/PostForm.vue';
+import useAlert from '@/composables/alert.js';
+import useAxios from '@/hooks/useAxios';
 
-import useAlert from '@/composables/alert';
-
+const route = useRoute();
+const router = useRouter();
+const id = route.params.id;
+// alert
 const { vAlert, vSusccess } = useAlert();
 
+const { data: form, error, loading } = useAxios(`/posts/${id}`);
+
 const {
-	params: { id },
-} = useRoute();
-const router = useRouter();
+	error: editError,
+	loading: editLoading,
+	excute,
+} = useAxios(
+	`/posts/${id}`,
+	{ method: 'patch' },
+	{
+		immediate: false,
+		onSuccess: () => {
+			vSusccess('수정이 완료되었습니다!');
+			router.push({ name: 'PostDetail', params: { id } });
+		},
+		onError: err => {
+			vAlert(err.message);
+		},
+	},
+);
+
+const edit = () => {
+	excute({
+		...form.value,
+	});
+};
 
 const goDetailPage = () => router.push({ name: 'PostDetail', params: { id } });
-
-const form = ref({
-	title: null,
-	content: null,
-});
-const error = ref(null);
-const loading = ref(false);
-
-const fetchPost = async () => {
-	try {
-		loading.value = true;
-		const data = await getPostById(id);
-		setForm(data);
-	} catch (err) {
-		error.value = err;
-	} finally {
-		loading.value = false;
-	}
-};
-const setForm = ({ title, content, createdAt }) => {
-	form.value = { title, content, createdAt };
-};
-fetchPost();
-
-const editError = ref(null);
-const editLoading = ref(false);
-
-const edit = async () => {
-	try {
-		editLoading.value = true;
-		await updatePost(id, { ...form.value });
-		router.push({ name: 'PostDetail', params: { id } });
-		vSusccess('수정이 완료되었습니다.');
-	} catch (err) {
-		vAlert(err.message);
-		editError.value = err;
-	} finally {
-		editError.value = false;
-	}
-};
 </script>
 
 <style lang="scss" scoped></style>
