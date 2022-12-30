@@ -5,6 +5,8 @@ import { createApp } from 'vue';
 import router from '@/router';
 import App from './App.vue';
 
+import { createPinia } from 'pinia';
+
 import globalDirectives from './plugins/global-directives';
 import dayjs from './plugins/dayjs';
 
@@ -13,11 +15,15 @@ import objPlugins from './plugins/obj';
 import person from './plugins/person';
 
 const app = createApp(App);
+// pinia
+app.use(createPinia());
+
 app.use(router);
 app.use(funcPlugins);
 app.use(person);
 app.use(globalDirectives);
 app.use(dayjs);
+
 // 이름 바꿀 수 있음
 // app.use(person, { name: '김준호' });
 app.use(objPlugins);
