@@ -1,11 +1,19 @@
 <template>
 	<h2>게시글 목록</h2>
 	<hr class="my-4" />
-	<PostFilter v-model:title="params.title_like" v-model:limt="params._limit" />
+	<PostFilter
+		v-model:title="params.title_like"
+		:limt="params._limit"
+		@update:limit="changeLimit"
+	/>
 	<br class="my-4" />
 
 	<AppLoading v-if="loading" />
 	<AppError v-else-if="error" :message="error.message" />
+
+	<template v-else-if="!isExist">
+		<p class="text-center py-5 text-muted">No Results</p>
+	</template>
 	<template v-else>
 		<div class="row g-3">
 			<div v-for="post in posts" :key="post.id" class="col-4">
@@ -54,7 +62,7 @@ const params = ref({
 	_sort: 'createdAt',
 	_order: 'desc',
 	_page: 1,
-	_limit: '3',
+	_limit: 6,
 	title_like: '',
 });
 
@@ -62,6 +70,10 @@ const router = useRouter();
 
 const previewId = ref(null);
 const selectPreview = id => (previewId.value = id);
+const changeLimit = value => {
+	params.value._limit = value;
+	params.value._page = 1;
+};
 
 const pageCount = computed(() =>
 	Math.ceil(totalCount.value / params.value._limit),
@@ -72,6 +84,7 @@ const {
 	error,
 	loading,
 } = useAxios('/posts', { params });
+const isExist = computed(() => posts.value && posts.value.length > 0);
 
 const totalCount = computed(() => response.value.headers['x-total-count']);
 
