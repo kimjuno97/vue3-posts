@@ -4,6 +4,8 @@
 			<label for="title" class="form-label">제목</label>
 			<input
 				:value="title"
+				v-focus
+				v-color="'red'"
 				@input="$emit('update:title', $event.target.value)"
 				type="text"
 				class="form-control"

@@ -14,7 +14,7 @@
 			></PostItem>
 		</div>
 	</div>
-	<AppPageNationV
+	<AppPageNation
 		:current-page="params._page"
 		:page-count="pageCount"
 		@page="page => (params._page = page)"
@@ -38,7 +38,6 @@ import { computed, ref, watchEffect } from 'vue';
 import { getPosts } from '@/api/posts';
 import { useRouter } from 'vue-router';
 
-import AppPageNationV from '@/components/AppPageNation.vue';
 import PostFilter from '@/components/posts/PostFilter.vue';
 import PostModal from '@/components/posts/PostModal.vue';
 

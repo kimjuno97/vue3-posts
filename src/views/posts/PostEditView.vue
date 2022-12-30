@@ -29,7 +29,6 @@ import { getPostById } from '@/api/posts';
 import { updatePost } from '@/api/posts';
 
 import PostForm from '@/components/posts/PostForm.vue';
-import AppAlert from '@/components/AppAlert.vue';
 
 const {
 	params: { id },
