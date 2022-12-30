@@ -15,6 +15,7 @@
 					:created-at="post.createdAt"
 					@click="goPage(post.id)"
 					@modal="openModal(post)"
+					@preview="selectPreview(post.id)"
 				></PostItem>
 			</div>
 		</div>
@@ -32,18 +33,21 @@
 			:created-at="modalCreatedAt"
 		/>
 	</Teleport>
-
-	<hr class="my-4 mt-5" />
+	<template v-if="previewId">
+		<hr class="my-4 mt-5" />
+		<AppCard>
+			<PostDetailView :id="previewId"></PostDetailView>
+		</AppCard>
+	</template>
 </template>
 
 <script setup>
 import PostItem from '@/components/posts/PostItem.vue';
-
-import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
-
+import PostDetailView from './PostDetailView.vue';
 import PostFilter from '@/components/posts/PostFilter.vue';
 import PostModal from '@/components/posts/PostModal.vue';
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import useAxios from '@/hooks/useAxios';
 
 const params = ref({
@@ -55,6 +59,9 @@ const params = ref({
 });
 
 const router = useRouter();
+
+const previewId = ref(null);
+const selectPreview = id => (previewId.value = id);
 
 const pageCount = computed(() =>
 	Math.ceil(totalCount.value / params.value._limit),

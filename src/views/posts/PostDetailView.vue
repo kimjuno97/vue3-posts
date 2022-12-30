@@ -3,6 +3,7 @@
 	<AppError v-else-if="error" :message="error.message" />
 	<template v-else>
 		<h2>{{ post.title }}</h2>
+		<p>{{ props.id }}, isOdd: {{ isOdd }}</p>
 		<p>{{ post.content }}</p>
 		<p class="text-muted">
 			{{ $dayjs(post.createdAt).format('YYYY. MM. DD HH:mm:ss') }}1
@@ -48,16 +49,20 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { deletePost } from '@/api/posts';
-import { ref } from 'vue';
 import useAxios from '@/hooks/useAxios';
 import useAlert from '@/composables/alert';
+import { computed, toRef, toRefs } from 'vue';
+import useNumber from '@/composables/number';
 
 const props = defineProps({
 	id: [String, Number],
 });
 
 const router = useRouter();
+// const idRef = toRef(props, 'id'); => 아래랑 같음
+const { id } = toRefs(props);
+
+const { isOdd } = useNumber(id);
 /**
  * ref
  * 장점) 스프레드 연산을 통한 객체활당 가능, 일관성
@@ -67,9 +72,10 @@ const router = useRouter();
  * 장점) form.title, form.content
  * 단점) 객체활당 불가능
  */
-
-const { error, loading, data: post } = useAxios(`/posts/${props.id}`);
+const url = computed(() => `/posts/${props.id}`);
+const { error, loading, data: post } = useAxios(url);
 const { vAlert, vSusccess } = useAlert();
+
 const {
 	error: removeError,
 	loading: removeLoading,

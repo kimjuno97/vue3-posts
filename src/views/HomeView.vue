@@ -1,5 +1,5 @@
 <script setup>
-import { inject } from 'vue';
+import { inject, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -9,6 +9,11 @@ const goAboutPage = () => {
 
 const person = inject('person');
 console.log('person.name', person.name);
+
+const position = reactive({
+	x: 100,
+	y: 1000,
+});
 </script>
 
 <template>
@@ -17,6 +22,8 @@ console.log('person.name', person.name);
 	<hr class="my-4" />
 	<h2>{{ $person.name }}</h2>
 	<button class="btn btn-primary" @click="person.say">Click Person</button>
+	<br />
+	<h2>{{ position }}</h2>
 </template>
 
 <script>
